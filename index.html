@@ -3,99 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Round Worm</title>
-  <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
+  <title>Roundworm Game</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      border: 1px solid white;
+    }
+  </style>
 </head>
 <body>
 
-  <canvas id="wormCanvas"></canvas>
+<canvas width="400" height="400" id="game"></canvas>
 
-  <script type="application/processing">
-    float heading;
-    float x;
-    float y;
-    float speed = 1;
-    float thickness = 10;  // Adjusted to make the worm segments larger
+<script>
+var canvas = document.getElementById('game');
+var context = canvas.getContext('2d');
 
-    float r = 128;
-    float g = 128;
-    float b = 128;
+// the canvas width & height, worm x & y, and the person x & y, all need to be multiples of the grid size in order for collision detection to work
+var grid = 16;
+var count = 0;
 
-    float prevLeftX;
-    float prevLeftY;
-    float prevRightX;
-    float prevRightY;
+var worm = {
+  x: 160,
+  y: 160,
+  dx: grid,
+  dy: 0,
+  cells: [],
+  maxCells: 4
+};
 
-    void setup() {
-      size(500, 500);
-      noSmooth();
-      frameRate(500);
-      background(64);
+var person = {
+  x: 320,
+  y: 320
+};
+
+// get random whole numbers in a specific range
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// game loop
+function loop() {
+  requestAnimationFrame(loop);
+
+  if (++count < 4) {
+    return;
+  }
+
+  count = 0;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  // move worm by its velocity
+  worm.x += worm.dx;
+  worm.y += worm.dy;
+
+  // wrap worm position horizontally on edge of screen
+  if (worm.x < 0) {
+    worm.x = canvas.width - grid;
+  }
+  else if (worm.x >= canvas.width) {
+    worm.x = 0;
+  }
+
+  // wrap worm position vertically on edge of screen
+  if (worm.y < 0) {
+    worm.y = canvas.height - grid;
+  }
+  else if (worm.y >= canvas.height) {
+    worm.y = 0;
+  }
+
+  // keep track of where worm has been. front of the array is always the head
+  worm.cells.unshift({x: worm.x, y: worm.y});
+
+  // remove cells as we move away from them
+  if (worm.cells.length > worm.maxCells) {
+    worm.cells.pop();
+  }
+
+  // draw person (food)
+  context.fillStyle = 'blue';
+  context.beginPath();
+  context.arc(person.x + grid / 2, person.y + grid / 2, grid / 2, 0, 2 * Math.PI);
+  context.fill();
+
+  // draw worm as a series of circles (segments)
+  context.fillStyle = 'green';
+  worm.cells.forEach(function(cell, index) {
+    context.beginPath();
+    context.arc(cell.x + grid / 2, cell.y + grid / 2, grid / 2, 0, 2 * Math.PI);
+    context.fill();
+
+    // worm ate person
+    if (cell.x === person.x && cell.y === person.y) {
+      worm.maxCells++;
+
+      // reposition the person (food)
+      person.x = getRandomInt(0, 25) * grid;
+      person.y = getRandomInt(0, 25) * grid;
     }
 
-    void draw() {
-      heading += sin(radians(frameCount)) * 3 + randomGaussian() * 4;
+    // check collision with all cells after this one
+    for (var i = index + 1; i < worm.cells.length; i++) {
+      // worm occupies same space as a body part. reset game
+      if (cell.x === worm.cells[i].x && cell.y === worm.cells[i].y) {
+        worm.x = 160;
+        worm.y = 160;
+        worm.cells = [];
+        worm.maxCells = 4;
+        worm.dx = grid;
+        worm.dy = 0;
 
-      r += random(-10, 10);
-      g += random(-10, 10);
-      b = constrain(b, 0, 256);
-
-      r = constrain(r, 0, 256);
-      g = constrain(g, 0, 256);
-      b += random(-10, 10);
-
-      x += cos(radians(heading)) * speed;
-      y += sin(radians(heading)) * speed;
-
-      if (x < 0) {
-        x = width;
-        prevLeftX += width;
-        prevRightX += width;
+        // reset the person (food)
+        person.x = getRandomInt(0, 25) * grid;
+        person.y = getRandomInt(0, 25) * grid;
       }
-      if (x > width) {
-        x = 0;
-        prevLeftX -= width;
-        prevRightX -= width;
-      }
-
-      if (y < 0) {
-        y = height;
-        prevLeftY += height;
-        prevRightY += height;
-      }
-      if (y > height) {
-        y = 0;
-        prevLeftY -= height;
-        prevRightY -= height;
-      }
-
-      float leftX = x + cos(radians(heading - 90)) * thickness;
-      float leftY = y + sin(radians(heading - 90)) * thickness;
-
-      float rightX = x + cos(radians(heading + 90)) * thickness;
-      float rightY = y + sin(radians(heading + 90)) * thickness;
-
-      noStroke();
-      fill(r, g, b);
-
-      // Draw the worm as a series of circles
-      float lerpFactor = 0.1; // A factor to smooth the transition between segments
-      float segmentRadius = thickness / 2;
-
-      // Draw a circle at the previous position (tail)
-      ellipse(prevLeftX, prevLeftY, segmentRadius * 2, segmentRadius * 2);
-      ellipse(prevRightX, prevRightY, segmentRadius * 2, segmentRadius * 2);
-
-      // Draw a circle at the current position (head)
-      ellipse(leftX, leftY, segmentRadius * 2, segmentRadius * 2);
-      ellipse(rightX, rightY, segmentRadius * 2, segmentRadius * 2);
-
-      prevLeftX = leftX;
-      prevLeftY = leftY;
-      prevRightX = rightX;
-      prevRightY = rightY;
     }
-  </script>
+  });
+}
+
+// listen to keyboard events to move the worm
+document.addEventListener('keydown', function(e) {
+  // prevent worm from backtracking on itself
+  if (e.which === 37 && worm.dx === 0) {
+    worm.dx = -grid;
+    worm.dy = 0;
+  }
+  else if (e.which === 38 && worm.dy === 0) {
+    worm.dy = -grid;
+    worm.dx = 0;
+  }
+  else if (e.which === 39 && worm.dx === 0) {
+    worm.dx = grid;
+    worm.dy = 0;
+  }
+  else if (e.which === 40 && worm.dy === 0) {
+    worm.dy = grid;
+    worm.dx = 0;
+  }
+});
+
+// start the game loop
+requestAnimationFrame(loop);
+</script>
 
 </body>
 </html>
