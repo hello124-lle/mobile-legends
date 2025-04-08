@@ -1,125 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realistic Roundworm Animation</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            overflow: hidden;
-        }
-
-        #worm-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .segment {
-            position: absolute;
-            width: 50px;
-            height: 20px;
-            background-color: rgba(139, 69, 19, 0.8); /* Semi-transparent for translucent effect */
-            border-radius: 30px;
-            transform-origin: center center;
-            animation: wiggle 0.2s ease-in-out infinite, moveWorm 10s linear infinite;
-        }
-
-        /* Organic, crazy wiggle effect */
-        @keyframes wiggle {
-            0% {
-                transform: rotate(0deg);
-            }
-            20% {
-                transform: rotate(20deg);
-            }
-            40% {
-                transform: rotate(-10deg);
-            }
-            60% {
-                transform: rotate(30deg);
-            }
-            80% {
-                transform: rotate(-20deg);
-            }
-            100% {
-                transform: rotate(10deg);
-            }
-        }
-
-        /* Randomize wiggle animation timing for each segment */
-        @keyframes moveWorm {
-            0% {
-                transform: translateX(0) translateY(0);
-            }
-            100% {
-                transform: translateX(100vw) translateY(0);
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round Worm</title>
+  <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js"></script>
 </head>
 <body>
-    <div id="worm-container">
-        <!-- Segments of the worm -->
-        <div class="segment" id="seg1"></div>
-        <div class="segment" id="seg2"></div>
-        <div class="segment" id="seg3"></div>
-        <div class="segment" id="seg4"></div>
-        <div class="segment" id="seg5"></div>
-        <div class="segment" id="seg6"></div>
-        <div class="segment" id="seg7"></div>
-        <div class="segment" id="seg8"></div>
-    </div>
 
-    <script>
-        // Adjust the position and movement of the segments to simulate realistic worm motion
-        window.onload = function() {
-            const segments = document.querySelectorAll('.segment');
-            
-            let offsetX = 0;
-            const segmentDistance = 50; // Distance between each segment
+  <canvas id="wormCanvas"></canvas>
 
-            // Randomize the timing for each segment's wiggle animation
-            segments.forEach((segment, index) => {
-                // Add random animation timing for each segment
-                const randomDuration = Math.random() * 2 + 1; // Random between 1 and 3 seconds
-                segment.style.animationDuration = `${randomDuration}s`;
+  <script type="application/processing">
+    float heading;
+    float x;
+    float y;
+    float speed = 1;
+    float thickness = 10;  // Adjusted to make the worm segments larger
 
-                // Apply a slight vertical shift to each segment for organic motion
-                segment.style.left = `${50 + offsetX}px`;
-                segment.style.top = `${50 + Math.sin(index * Math.PI / 6) * 15}px`; // Use sine function for wave-like behavior
-                offsetX += segmentDistance;
-            });
+    float r = 128;
+    float g = 128;
+    float b = 128;
 
-            // Animation to move the worm across the screen with a smooth transition
-            const moveDistance = 150; // Worm's movement across the screen
-            let moveOffset = 0;
-            setInterval(() => {
-                moveOffset += 2; // Increase movement speed
-                if (moveOffset > window.innerWidth) {
-                    moveOffset = -moveDistance; // Reset if the worm moves off the screen
-                }
+    float prevLeftX;
+    float prevLeftY;
+    float prevRightX;
+    float prevRightY;
 
-                // Apply movement to each segment with wave-based offsets
-                segments.forEach((segment, index) => {
-                    const newX = moveOffset + index * segmentDistance;
-                    segment.style.left = `${newX}px`;
-                    segment.style.top = `${50 + Math.sin(newX / 80) * 20}px`; // More erratic movement for a "crazy" effect
-                });
-            }, 16); // Update every 16ms for smooth animation
-        };
-    </script>
+    void setup() {
+      size(500, 500);
+      noSmooth();
+      frameRate(500);
+      background(64);
+    }
+
+    void draw() {
+      heading += sin(radians(frameCount)) * 3 + randomGaussian() * 4;
+
+      r += random(-10, 10);
+      g += random(-10, 10);
+      b = constrain(b, 0, 256);
+
+      r = constrain(r, 0, 256);
+      g = constrain(g, 0, 256);
+      b += random(-10, 10);
+
+      x += cos(radians(heading)) * speed;
+      y += sin(radians(heading)) * speed;
+
+      if (x < 0) {
+        x = width;
+        prevLeftX += width;
+        prevRightX += width;
+      }
+      if (x > width) {
+        x = 0;
+        prevLeftX -= width;
+        prevRightX -= width;
+      }
+
+      if (y < 0) {
+        y = height;
+        prevLeftY += height;
+        prevRightY += height;
+      }
+      if (y > height) {
+        y = 0;
+        prevLeftY -= height;
+        prevRightY -= height;
+      }
+
+      float leftX = x + cos(radians(heading - 90)) * thickness;
+      float leftY = y + sin(radians(heading - 90)) * thickness;
+
+      float rightX = x + cos(radians(heading + 90)) * thickness;
+      float rightY = y + sin(radians(heading + 90)) * thickness;
+
+      noStroke();
+      fill(r, g, b);
+
+      // Draw the worm as a series of circles
+      float lerpFactor = 0.1; // A factor to smooth the transition between segments
+      float segmentRadius = thickness / 2;
+
+      // Draw a circle at the previous position (tail)
+      ellipse(prevLeftX, prevLeftY, segmentRadius * 2, segmentRadius * 2);
+      ellipse(prevRightX, prevRightY, segmentRadius * 2, segmentRadius * 2);
+
+      // Draw a circle at the current position (head)
+      ellipse(leftX, leftY, segmentRadius * 2, segmentRadius * 2);
+      ellipse(rightX, rightY, segmentRadius * 2, segmentRadius * 2);
+
+      prevLeftX = leftX;
+      prevLeftY = leftY;
+      prevRightX = rightX;
+      prevRightY = rightY;
+    }
+  </script>
+
 </body>
 </html>
