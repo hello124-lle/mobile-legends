@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realistic Roundworm Animation</title>
+    <title>Roundworm Animation</title>
     <style>
         * {
             margin: 0;
@@ -29,34 +29,33 @@
 
         .segment {
             position: absolute;
-            width: 30px;
+            width: 40px;
             height: 15px;
             background-color: #8b4513;
-            border-radius: 8px;
+            border-radius: 50px; /* Make it rounded, resembling a cylindrical shape */
             transform-origin: center center;
-            animation: wiggle 1s ease-in-out infinite;
+            animation: wiggle 0.5s ease-in-out infinite;
         }
 
-        /* Wave-like motion for more realistic undulation */
+        /* Animations for realistic movement */
         @keyframes wiggle {
             0% {
                 transform: rotate(0deg);
             }
             25% {
-                transform: rotate(15deg);
+                transform: rotate(10deg);
             }
             50% {
                 transform: rotate(0deg);
             }
             75% {
-                transform: rotate(-15deg);
+                transform: rotate(-10deg);
             }
             100% {
                 transform: rotate(0deg);
             }
         }
 
-        /* Simulating the worm movement along the x-axis with natural shifts */
         @keyframes moveWorm {
             0% {
                 transform: translateX(0) translateY(0);
@@ -77,6 +76,7 @@
         <div class="segment" id="seg5"></div>
         <div class="segment" id="seg6"></div>
         <div class="segment" id="seg7"></div>
+        <div class="segment" id="seg8"></div>
     </div>
 
     <script>
@@ -85,7 +85,7 @@
             const segments = document.querySelectorAll('.segment');
             
             let offsetX = 0;
-            const segmentDistance = 30; // Distance between each segment
+            const segmentDistance = 40; // Distance between each segment
 
             // Position segments in a chain with slight offsets
             segments.forEach((segment, index) => {
@@ -110,7 +110,7 @@
                 segments.forEach((segment, index) => {
                     const newX = moveOffset + index * segmentDistance;
                     segment.style.left = `${newX}px`;
-                    segment.style.top = `${50 + Math.sin(newX / 80) * 15}px`; // Smooth undulation based on the position
+                    segment.style.top = `${50 + Math.sin(newX / 80) * 10}px`; // Smooth undulation based on the position
                 });
             }, 16); // Update every 16ms for smooth animation
         };
