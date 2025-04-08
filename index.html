@@ -30,32 +30,33 @@
         .segment {
             position: absolute;
             width: 30px;
-            height: 10px;
+            height: 15px;
             background-color: #8b4513;
-            border-radius: 5px;
+            border-radius: 8px;
             transform-origin: center center;
-            animation: wiggle 0.5s ease-in-out infinite;
+            animation: wiggle 1s ease-in-out infinite;
         }
 
-        /* Animations for undulating worm motion */
+        /* Wave-like motion for more realistic undulation */
         @keyframes wiggle {
             0% {
                 transform: rotate(0deg);
             }
             25% {
-                transform: rotate(10deg);
+                transform: rotate(15deg);
             }
             50% {
                 transform: rotate(0deg);
             }
             75% {
-                transform: rotate(-10deg);
+                transform: rotate(-15deg);
             }
             100% {
                 transform: rotate(0deg);
             }
         }
 
+        /* Simulating the worm movement along the x-axis with natural shifts */
         @keyframes moveWorm {
             0% {
                 transform: translateX(0) translateY(0);
@@ -74,6 +75,8 @@
         <div class="segment" id="seg3"></div>
         <div class="segment" id="seg4"></div>
         <div class="segment" id="seg5"></div>
+        <div class="segment" id="seg6"></div>
+        <div class="segment" id="seg7"></div>
     </div>
 
     <script>
@@ -82,31 +85,32 @@
             const segments = document.querySelectorAll('.segment');
             
             let offsetX = 0;
-            const segmentDistance = 10; // Distance between each segment
+            const segmentDistance = 30; // Distance between each segment
 
+            // Position segments in a chain with slight offsets
             segments.forEach((segment, index) => {
-                segment.style.animationDuration = (Math.random() * (2 - 1) + 1) + 's'; // Add random animation duration for each segment
+                segment.style.animationDuration = (Math.random() * (2 - 1) + 1) + 's'; // Randomize the animation duration for each segment
                 
-                // Position segments in a chain with slight offsets
+                // Apply a slight vertical shift to each segment for organic motion
                 segment.style.left = `${50 + offsetX}px`;
-                segment.style.top = `${50 + Math.sin(index * Math.PI / 3) * 10}px`; // Sinusoidal movement to simulate undulation
+                segment.style.top = `${50 + Math.sin(index * Math.PI / 5) * 10}px`; // Use sine function for wave-like behavior
                 offsetX += segmentDistance;
             });
 
-            // Animation to move the worm across the screen
+            // Animation to move the worm across the screen with a smooth transition
             const moveDistance = 150; // Worm's movement across the screen
             let moveOffset = 0;
             setInterval(() => {
                 moveOffset += 1;
                 if (moveOffset > window.innerWidth) {
-                    moveOffset = -moveDistance; // Reset if the worm moves off screen
+                    moveOffset = -moveDistance; // Reset if the worm moves off the screen
                 }
 
-                // Apply movement to each segment
+                // Apply movement to each segment with wave-based offsets
                 segments.forEach((segment, index) => {
                     const newX = moveOffset + index * segmentDistance;
                     segment.style.left = `${newX}px`;
-                    segment.style.top = `${50 + Math.sin(newX / 100) * 20}px`; // Smooth undulation based on the position
+                    segment.style.top = `${50 + Math.sin(newX / 80) * 15}px`; // Smooth undulation based on the position
                 });
             }, 16); // Update every 16ms for smooth animation
         };
