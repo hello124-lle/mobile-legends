@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roundworm Animation</title>
+    <title>Realistic Roundworm Animation</title>
     <style>
         * {
             margin: 0;
@@ -29,33 +29,37 @@
 
         .segment {
             position: absolute;
-            width: 40px;
-            height: 15px;
-            background-color: #8b4513;
-            border-radius: 50px; /* Make it rounded, resembling a cylindrical shape */
+            width: 50px;
+            height: 20px;
+            background-color: rgba(139, 69, 19, 0.8); /* Semi-transparent for translucent effect */
+            border-radius: 30px;
             transform-origin: center center;
-            animation: wiggle 0.5s ease-in-out infinite;
+            animation: wiggle 0.2s ease-in-out infinite, moveWorm 10s linear infinite;
         }
 
-        /* Animations for realistic movement */
+        /* Organic, crazy wiggle effect */
         @keyframes wiggle {
             0% {
                 transform: rotate(0deg);
             }
-            25% {
-                transform: rotate(10deg);
+            20% {
+                transform: rotate(20deg);
             }
-            50% {
-                transform: rotate(0deg);
-            }
-            75% {
+            40% {
                 transform: rotate(-10deg);
             }
+            60% {
+                transform: rotate(30deg);
+            }
+            80% {
+                transform: rotate(-20deg);
+            }
             100% {
-                transform: rotate(0deg);
+                transform: rotate(10deg);
             }
         }
 
+        /* Randomize wiggle animation timing for each segment */
         @keyframes moveWorm {
             0% {
                 transform: translateX(0) translateY(0);
@@ -85,15 +89,17 @@
             const segments = document.querySelectorAll('.segment');
             
             let offsetX = 0;
-            const segmentDistance = 40; // Distance between each segment
+            const segmentDistance = 50; // Distance between each segment
 
-            // Position segments in a chain with slight offsets
+            // Randomize the timing for each segment's wiggle animation
             segments.forEach((segment, index) => {
-                segment.style.animationDuration = (Math.random() * (2 - 1) + 1) + 's'; // Randomize the animation duration for each segment
-                
+                // Add random animation timing for each segment
+                const randomDuration = Math.random() * 2 + 1; // Random between 1 and 3 seconds
+                segment.style.animationDuration = `${randomDuration}s`;
+
                 // Apply a slight vertical shift to each segment for organic motion
                 segment.style.left = `${50 + offsetX}px`;
-                segment.style.top = `${50 + Math.sin(index * Math.PI / 5) * 10}px`; // Use sine function for wave-like behavior
+                segment.style.top = `${50 + Math.sin(index * Math.PI / 6) * 15}px`; // Use sine function for wave-like behavior
                 offsetX += segmentDistance;
             });
 
@@ -101,7 +107,7 @@
             const moveDistance = 150; // Worm's movement across the screen
             let moveOffset = 0;
             setInterval(() => {
-                moveOffset += 1;
+                moveOffset += 2; // Increase movement speed
                 if (moveOffset > window.innerWidth) {
                     moveOffset = -moveDistance; // Reset if the worm moves off the screen
                 }
@@ -110,7 +116,7 @@
                 segments.forEach((segment, index) => {
                     const newX = moveOffset + index * segmentDistance;
                     segment.style.left = `${newX}px`;
-                    segment.style.top = `${50 + Math.sin(newX / 80) * 10}px`; // Smooth undulation based on the position
+                    segment.style.top = `${50 + Math.sin(newX / 80) * 20}px`; // More erratic movement for a "crazy" effect
                 });
             }, 16); // Update every 16ms for smooth animation
         };
