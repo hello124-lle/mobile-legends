@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roundworm Animation</title>
+    <title>Realistic Roundworm Animation</title>
     <style>
         * {
             margin: 0;
@@ -17,6 +17,7 @@
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
+            overflow: hidden;
         }
 
         #worm-container {
@@ -26,55 +27,88 @@
             overflow: hidden;
         }
 
-        #worm {
+        .segment {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 50px;
-            height: 20px;
+            width: 30px;
+            height: 10px;
             background-color: #8b4513;
-            border-radius: 50%;
+            border-radius: 5px;
             transform-origin: center center;
-            animation: moveWorm 5s infinite linear, wiggle 0.5s ease-in-out infinite;
+            animation: wiggle 0.5s ease-in-out infinite;
         }
 
-        @keyframes moveWorm {
-            0% {
-                transform: translateX(0) rotate(0deg);
-            }
-            100% {
-                transform: translateX(100vw) rotate(360deg);
-            }
-        }
-
+        /* Animations for undulating worm motion */
         @keyframes wiggle {
             0% {
                 transform: rotate(0deg);
             }
             25% {
-                transform: rotate(15deg);
+                transform: rotate(10deg);
             }
             50% {
                 transform: rotate(0deg);
             }
             75% {
-                transform: rotate(-15deg);
+                transform: rotate(-10deg);
             }
             100% {
                 transform: rotate(0deg);
+            }
+        }
+
+        @keyframes moveWorm {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+            100% {
+                transform: translateX(100vw) translateY(0);
             }
         }
     </style>
 </head>
 <body>
     <div id="worm-container">
-        <div id="worm"></div>
+        <!-- Segments of the worm -->
+        <div class="segment" id="seg1"></div>
+        <div class="segment" id="seg2"></div>
+        <div class="segment" id="seg3"></div>
+        <div class="segment" id="seg4"></div>
+        <div class="segment" id="seg5"></div>
     </div>
+
     <script>
+        // Adjust the position and movement of the segments to simulate realistic worm motion
         window.onload = function() {
-            const worm = document.getElementById('worm');
-            const animationDuration = Math.random() * (6 - 3) + 3; // Random duration between 3 and 6 seconds
-            worm.style.animationDuration = animationDuration + 's';
+            const segments = document.querySelectorAll('.segment');
+            
+            let offsetX = 0;
+            const segmentDistance = 10; // Distance between each segment
+
+            segments.forEach((segment, index) => {
+                segment.style.animationDuration = (Math.random() * (2 - 1) + 1) + 's'; // Add random animation duration for each segment
+                
+                // Position segments in a chain with slight offsets
+                segment.style.left = `${50 + offsetX}px`;
+                segment.style.top = `${50 + Math.sin(index * Math.PI / 3) * 10}px`; // Sinusoidal movement to simulate undulation
+                offsetX += segmentDistance;
+            });
+
+            // Animation to move the worm across the screen
+            const moveDistance = 150; // Worm's movement across the screen
+            let moveOffset = 0;
+            setInterval(() => {
+                moveOffset += 1;
+                if (moveOffset > window.innerWidth) {
+                    moveOffset = -moveDistance; // Reset if the worm moves off screen
+                }
+
+                // Apply movement to each segment
+                segments.forEach((segment, index) => {
+                    const newX = moveOffset + index * segmentDistance;
+                    segment.style.left = `${newX}px`;
+                    segment.style.top = `${50 + Math.sin(newX / 100) * 20}px`; // Smooth undulation based on the position
+                });
+            }, 16); // Update every 16ms for smooth animation
         };
     </script>
 </body>
