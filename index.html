@@ -13,14 +13,22 @@
 
         .worm {
             position: absolute;
-            width: 30px;
-            height: 10px;
-            background-color: #8a2be2;
-            animation: moveWorm 5s linear infinite;
-            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            z-index: 10;
         }
 
-        /* Different worm movements */
+        /* Worm body segment */
+        .segment {
+            width: 20px;
+            height: 20px;
+            background-color: #8a2be2;
+            border-radius: 50%;
+            margin: 2px;
+            animation: moveWorm 5s linear infinite;
+        }
+
+        /* Animation to move worms */
         @keyframes moveWorm {
             0% {
                 transform: translate(0, 0);
@@ -30,37 +38,84 @@
             }
         }
 
-        /* Generate many worms with random positions and speeds */
-        .worm:nth-child(odd) {
+        /* Generate different speeds for worms */
+        .worm:nth-child(odd) .segment {
             animation-duration: 4s;
         }
 
-        .worm:nth-child(even) {
+        .worm:nth-child(even) .segment {
             animation-duration: 6s;
         }
+
+        /* Tail segments with different sizes */
+        .segment:nth-child(1) {
+            width: 24px;
+            height: 24px;
+        }
+
+        .segment:nth-child(2) {
+            width: 22px;
+            height: 22px;
+        }
+
+        .segment:nth-child(3) {
+            width: 20px;
+            height: 20px;
+        }
+
+        .segment:nth-child(4) {
+            width: 18px;
+            height: 18px;
+        }
+
+        .segment:nth-child(5) {
+            width: 16px;
+            height: 16px;
+        }
+
     </style>
 </head>
 <body>
-    <div class="worm" style="top: 50px; left: 100px;"></div>
-    <div class="worm" style="top: 200px; left: 300px;"></div>
-    <div class="worm" style="top: 400px; left: 500px;"></div>
-    <div class="worm" style="top: 600px; left: 700px;"></div>
-    <div class="worm" style="top: 800px; left: 900px;"></div>
-    <div class="worm" style="top: 100px; left: 1200px;"></div>
-    <div class="worm" style="top: 250px; left: 1500px;"></div>
-    <div class="worm" style="top: 350px; left: 1800px;"></div>
+    <div class="worm" style="top: 50px; left: 100px;">
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+    </div>
+
+    <div class="worm" style="top: 200px; left: 300px;">
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+    </div>
+
+    <div class="worm" style="top: 400px; left: 500px;">
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+    </div>
 
     <script>
         // JavaScript to dynamically create more worms
         for (let i = 0; i < 50; i++) {
             let worm = document.createElement('div');
             worm.classList.add('worm');
+            let segmentCount = Math.floor(Math.random() * 3) + 4; // random number of segments (between 4 and 6)
+            for (let j = 0; j < segmentCount; j++) {
+                let segment = document.createElement('div');
+                segment.classList.add('segment');
+                worm.appendChild(segment);
+            }
             worm.style.top = Math.random() * window.innerHeight + 'px';
             worm.style.left = Math.random() * window.innerWidth + 'px';
-            worm.style.animationDuration = Math.random() * 3 + 4 + 's'; // Random duration
+            worm.style.animationDuration = Math.random() * 3 + 4 + 's'; // Random speed for each worm
             document.body.appendChild(worm);
         }
     </script>
 </body>
 </html>
-
