@@ -43,7 +43,8 @@ var worm = {
 
 var person = {
   x: 320,
-  y: 320
+  y: 320,
+  emoji: '👩‍⚕️🎓' // Nursing student emoji (female nurse with graduation cap)
 };
 
 // get random whole numbers in a specific range
@@ -90,14 +91,12 @@ function loop() {
     worm.cells.pop();
   }
 
-  // draw person (food)
-  context.fillStyle = 'blue';
-  context.beginPath();
-  context.arc(person.x + grid / 2, person.y + grid / 2, grid / 2, 0, 2 * Math.PI);
-  context.fill();
+  // draw person (nursing student emoji) using emoji
+  context.font = '16px Arial';
+  context.fillText(person.emoji, person.x + grid / 4, person.y + grid / 1.25);
 
   // draw worm as a series of circles (segments)
-  context.fillStyle = 'green';
+  context.fillStyle = 'brown';
   worm.cells.forEach(function(cell, index) {
     context.beginPath();
     context.arc(cell.x + grid / 2, cell.y + grid / 2, grid / 2, 0, 2 * Math.PI);
@@ -107,7 +106,7 @@ function loop() {
     if (cell.x === person.x && cell.y === person.y) {
       worm.maxCells++;
 
-      // reposition the person (food)
+      // reposition the person (nursing student emoji)
       person.x = getRandomInt(0, 25) * grid;
       person.y = getRandomInt(0, 25) * grid;
     }
@@ -123,7 +122,7 @@ function loop() {
         worm.dx = grid;
         worm.dy = 0;
 
-        // reset the person (food)
+        // reset the person (nursing student emoji)
         person.x = getRandomInt(0, 25) * grid;
         person.y = getRandomInt(0, 25) * grid;
       }
