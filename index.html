@@ -3,157 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roundworm Game</title>
+  <title>Learn About Roundworms - Fun & Facts!</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
     body {
-      background: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #ffebee; /* Light pink background */
+      color: #4caf50; /* Vibrant green text */
+      margin: 0;
+      padding: 0;
     }
-    canvas {
-      border: 1px solid white;
+
+    header {
+      background-color: #ff4081; /* Bright pink header */
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 5px solid #388e3c;
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+      color: #ec407a; /* Bright pink headings */
+    }
+
+    .roundworm-img {
+      width: 100%;
+      max-width: 350px;
+      display: block;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .fun-fact {
+      background-color: #c8e6c9; /* Light green background */
+      border-left: 5px solid #388e3c;
+      padding: 15px;
+      margin-top: 25px;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    .bubble-button {
+      background-color: #4caf50;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-align: center;
+      display: inline-block;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .bubble-button:hover {
+      background-color: #388e3c;
+    }
+
+    .footer {
+      background-color: #ff4081;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .highlight {
+      color: #f44336;
+      font-weight: bold;
+    }
+
+    .list-item {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    /* Gallery styles */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 40px auto;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 50%;
+      border: 6px dashed #ff69b4;
+      transition: filter 0.3s ease;
+      animation: idleWiggle 4s ease-in-out infinite;
+    }
+
+    .gallery img:hover {
+      animation: wiggle 0.5s infinite;
+      filter: brightness(110%);
+      border-color: #34a853;
+    }
+
+    @keyframes wiggle {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(2deg); }
+      50%  { transform: rotate(-2deg); }
+      75%  { transform: rotate(2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    @keyframes idleWiggle {
+      0%   { transform: rotate(0deg); }
+      50%  { transform: rotate(1deg); }
+      100% { transform: rotate(0deg); }
     }
   </style>
 </head>
 <body>
 
-<canvas width="400" height="400" id="game"></canvas>
+  <header>
+    Roundworm Fun Facts 🐛
+  </header>
 
-<script>
-var canvas = document.getElementById('game');
-var context = canvas.getContext('2d');
+  <div class="container">
+    <h2>What Are Roundworms?</h2>
+    <p>Roundworms are squiggly little creatures that can live inside your body and cause all sorts of fun (and sometimes not-so-fun) things to happen! They’re tiny, but oh boy, they sure can be interesting to learn about—especially for nurses and healthcare pros!</p>
 
-// the canvas width & height, worm x & y, and the person x & y, all need to be multiples of the grid size in order for collision detection to work
-var grid = 16;
-var count = 0;
+    <img class="roundworm-img" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.ClATpl_bnGkNOaOdTnQGCwHaE8%26pid%3DApi&f=1&ipt=91a60195405a4195709c208940f803d2dbe657bd4c9ea234c6f9aadafe3b08ae&ipo=images" alt="Roundworm Image">
+    
+    <div class="fun-fact">
+      <p><strong>Did you know?</strong> Roundworms can grow up to 10 - 31 cm long! That's like a ruler long! 😱</p>
+    </div>
 
-var worm = {
-  x: 160,
-  y: 160,
-  dx: grid,
-  dy: 0,
-  cells: [],
-  maxCells: 4
-};
+    <h3>How Do Roundworms Affect Humans?</h3>
+    <p>Roundworms love to live in your intestines, and they can cause some problems if left untreated! Here are a few common symptoms:</p>
+    <ul>
+      <li class="list-item">Stomach cramps or bloating.</li>
+      <li class="list-item">Unexplained fatigue.</li>
+      <li class="list-item">A persistent cough (especially with Ascaris infections).</li>
+      <li class="list-item">And sometimes, they even cause a fun little thing called <span class="highlight">intestinal blockage</span>—not so fun, though!</li>
+    </ul>
 
-var person = {
-  x: 320,
-  y: 320,
-  emoji: '👩‍⚕️🎓' // Nursing student emoji (female nurse with graduation cap)
-};
+    <h3>How to Keep Roundworms Away! 🦠</h3>
+    <p>Roundworms may seem scary, but with a few simple steps, you can keep them at bay:</p>
+    <ul>
+      <li class="list-item">Wash your hands like a pro, especially before eating or preparing food.</li>
+      <li class="list-item">Avoid drinking contaminated water.</li>
+      <li class="list-item">Cook food thoroughly and don’t eat raw meat that could be contaminated.</li>
+      <li class="list-item">Keep your living spaces clean—roundworms hate cleanliness!</li>
+    </ul>
 
-// get random whole numbers in a specific range
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+    <h3>Fun Fact Time! 🎉</h3>
+    <p>Roundworms are so diverse that they live in EVERY habitat imaginable, from deep in the ocean to the tops of mountains. Some even live in plants! And get this—<span class="highlight">some roundworms are bioluminescent</span> (meaning they can glow in the dark!). 🌟</p>
 
-// game loop
-function loop() {
-  requestAnimationFrame(loop);
+    <button class="bubble-button" onclick="window.open('https://youtu.be/hm9olv4tJFk?si=WPrbi76-GaopmKGN')">Learn More Fun Facts!</button>
+  </div>
 
-  if (++count < 4) {
-    return;
-  }
+  <div class="gallery">
+    <img src="https://scontent.fmnl16-1.fna.fbcdn.net/v/t39.30808-1/351110294_151773644553924_2882956576233497617_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeER-HqGHLKNIg4zAwfpquMRe6CF5txBrPJ7oIXm3EGs8l0Udixf1-ic21e2gpgn1P52UpRfHlqFcxUfP-CgAA0Z&_nc_ohc=xFqRsSnuA-YQ7kNvwEY8ZzD&_nc_oc=Adk7gvaXU8GSO2NCwxna0d9Y5vVgwnLzW4ewPNu5XL8WpgFqPLh40BJwQJ43XksD2KQ&_nc_zt=24&_nc_ht=scontent.fmnl16-1.fna&_nc_gid=by-yIF_0P_auoDa8lKgt1Q&oh=00_AfH2iA3jDS8-baUJitpd_W6IGWMCJaVJPyFMtTd-oYRxuQ&oe=67FAE7DC" alt="Photo 1">
+    <img src="https://scontent.fmnl16-1.fna.fbcdn.net/v/t39.30808-1/440888250_1360133541287868_6539841880054035921_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=101&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeGSbdxw8DWCGWSujut7cO18wlhaj0XXUF3CWFqPRddQXa8Ll-7TsBat_3YX8DH-tjTZCPMzyTNfXgO50IyovDGZ&_nc_ohc=F7pA7hcQfsIQ7kNvwHXyTjo&_nc_oc=AdluFQkmjv_cHD5CnHCtRxEYScplc9wo4ZW0QqbPG4F52HUxpphw7OzmoYMvNtGcXMw&_nc_zt=24&_nc_ht=scontent.fmnl16-1.fna&_nc_gid=W1dzV4YUl1ySrDVW2xdrWg&oh=00_AfGmsARpvf5cAE2vtcDqKaJuLyS1gCRg_YQK_Ap7kkTSSA&oe=67FAED60" alt="Photo 2">
+    <img src="https://scontent.fmnl16-1.fna.fbcdn.net/v/t39.30808-1/480551855_1377614043258590_5918598905875331686_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeH4FL6CvTtw34dr74HNVxjsAAPppiQZJfoAA-mmJBkl-nEGqWdCRvh1jC-VYFbSFe1L9ym2oDgARJG9j_7cWUYZ&_nc_ohc=0mUhKd74tygQ7kNvwHcizFu&_nc_oc=AdlY61w795djwTkRI0sez1BUCImwV4VfkTMRrYCfvGjSzEQBKfGeyIGDBmfZw8XhPlM&_nc_zt=24&_nc_ht=scontent.fmnl16-1.fna&_nc_gid=jX50c60V-hr4bKH9dB_8hg&oh=00_AfFr-8epyXdLbiE7c6UCGtm4A7tG74RE951CJSeFJB1AXA&oe=67FAC415" alt="Photo 3">
+    <img src="https://scontent.fmnl16-1.fna.fbcdn.net/v/t39.30808-1/463756894_2023917731413313_1792943121200712030_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=101&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHM0oaJJPGgnp1b1HiF_X9sDfuw8Y5rMrEN-7DxjmsysTXL0vK4Mu8ecLM8nhOoMlZ7qC_SuDf2ngWMzFm9jrP8&_nc_ohc=gouCn6qVfPcQ7kNvwH_4_BR&_nc_oc=AdlPOzcFRRjxQ20hseGp-F7lbibiccH2m1C4eUZOPXYqHe7_1t-aj5RucgtvkAH85IU&_nc_zt=24&_nc_ht=scontent.fmnl16-1.fna&_nc_gid=MO3hgb80lF4boaynsq8IHg&oh=00_AfGXgxNxP0GBrf20VcfwBs5uL7K7OPykUe2zb48-jWSNvw&oe=67FACF14" alt="Photo 4">
+    <img src="https://scontent.fmnl16-1.fna.fbcdn.net/v/t39.30808-1/487241243_4005753533084558_957218011660039428_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeFlr6v1JDE648RNeBdBu5uzJEydXG8mPAkkTJ1cbyY8CdnuXJyW3FuegnMDTeMhhPqYU7I2SE3hfBnViQI8Gni7&_nc_ohc=CJobxGJ37_EQ7kNvwEx1Jyg&_nc_oc=AdnpItBNjSh_2mqFO8yAdKIoMiy3mt2yo4-RrJOjx5aBByTahRjCsmKfaTiaGhaOnJM&_nc_zt=23&_nc_ht=scontent.fmnl16-1.fna&_nc_gid=k8sXfFbZAqLB16Kn9u15iQ&oh=00_AfH5Sfp3b2cXyfrs6JZkjQAR-iGQ6jvTInz9P0sdtsK0vw&oe=67FACD43" alt="Photo 5">
+  </div>
 
-  count = 0;
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
-  // move worm by its velocity
-  worm.x += worm.dx;
-  worm.y += worm.dy;
-
-  // wrap worm position horizontally on edge of screen
-  if (worm.x < 0) {
-    worm.x = canvas.width - grid;
-  }
-  else if (worm.x >= canvas.width) {
-    worm.x = 0;
-  }
-
-  // wrap worm position vertically on edge of screen
-  if (worm.y < 0) {
-    worm.y = canvas.height - grid;
-  }
-  else if (worm.y >= canvas.height) {
-    worm.y = 0;
-  }
-
-  // keep track of where worm has been. front of the array is always the head
-  worm.cells.unshift({x: worm.x, y: worm.y});
-
-  // remove cells as we move away from them
-  if (worm.cells.length > worm.maxCells) {
-    worm.cells.pop();
-  }
-
-  // draw person (nursing student emoji) using emoji
-  context.font = '16px Arial';
-  context.fillText(person.emoji, person.x + grid / 4, person.y + grid / 1.25);
-
-  // draw worm as a series of circles (segments)
-  context.fillStyle = 'brown';
-  worm.cells.forEach(function(cell, index) {
-    context.beginPath();
-    context.arc(cell.x + grid / 2, cell.y + grid / 2, grid / 2, 0, 2 * Math.PI);
-    context.fill();
-
-    // worm ate person
-    if (cell.x === person.x && cell.y === person.y) {
-      worm.maxCells++;
-
-      // reposition the person (nursing student emoji)
-      person.x = getRandomInt(0, 25) * grid;
-      person.y = getRandomInt(0, 25) * grid;
-    }
-
-    // check collision with all cells after this one
-    for (var i = index + 1; i < worm.cells.length; i++) {
-      // worm occupies same space as a body part. reset game
-      if (cell.x === worm.cells[i].x && cell.y === worm.cells[i].y) {
-        worm.x = 160;
-        worm.y = 160;
-        worm.cells = [];
-        worm.maxCells = 4;
-        worm.dx = grid;
-        worm.dy = 0;
-
-        // reset the person (nursing student emoji)
-        person.x = getRandomInt(0, 25) * grid;
-        person.y = getRandomInt(0, 25) * grid;
-      }
-    }
-  });
-}
-
-// listen to keyboard events to move the worm
-document.addEventListener('keydown', function(e) {
-  // prevent worm from backtracking on itself
-  if (e.which === 37 && worm.dx === 0) {
-    worm.dx = -grid;
-    worm.dy = 0;
-  }
-  else if (e.which === 38 && worm.dy === 0) {
-    worm.dy = -grid;
-    worm.dx = 0;
-  }
-  else if (e.which === 39 && worm.dx === 0) {
-    worm.dx = grid;
-    worm.dy = 0;
-  }
-  else if (e.which === 40 && worm.dy === 0) {
-    worm.dy = grid;
-    worm.dx = 0;
-  }
-});
-
-// start the game loop
-requestAnimationFrame(loop);
-</script>
+  <div class="footer">
+    Thanks for Visiting! Stay curious and keep learning about cool creatures like roundworms! 🐛
+  </div>
 
 </body>
 </html>
